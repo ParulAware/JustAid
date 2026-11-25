@@ -1,0 +1,333 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.2;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #003366;
+    padding: 10px 20px;
+    color: white;
+}
+
+header .logo img {
+    height: 50px;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown a {
+    text-decoration: none;
+    color: white;
+    font-weight: 400;
+    font-size: 16px;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.dropdown a:hover {
+    color: rgb(0, 0, 10);
+    text-shadow: 0 0 5px rgba(7, 3, 77, 0.7);
+}
+
+.dropdown ul {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    padding: 0;
+    list-style-type: none;
+    min-width: 200px;
+    border-radius: 5px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s ease 0.3s;
+}
+
+.dropdown:hover ul {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0s ease 0s;
+}
+
+.dropdown ul li {
+    padding: 6px 10px;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+}
+
+.dropdown ul li a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown ul li a:hover {
+    background-color: #f1f1f1;
+    color: #003366;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.dropdown ul li a:active {
+    background-color: #ddd;
+    color: #003366;
+}
+
+.dropdown > a::after {
+    content: " ▼";
+    font-size: 0.8em;
+    color: white;
+    margin-left: 5px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.dropdown:hover > a::after {
+    transform: rotate(180deg);
+}
+
+.dropdown ul li:hover {
+    transform: translateY(-5px);
+}
+
+/* Hero Section */
+.hero {
+    background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ-eNU-p6qVbK1PMrhGXlyDYFJwoR5aPDWkrDV9tdEI6T2IchgsG_IPELlHLxgZqO-SgM&usqp=CAU') no-repeat center center/cover;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+.hero h1 {
+    font-size: 3em;
+    font-weight: 700;
+}
+
+.hero p {
+    font-size: 1.2em;
+    margin: 20px 0;
+}
+
+/* Features Section */
+.features {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px 20px;
+    flex-wrap: wrap;
+}
+
+.feature-card {
+    background-color: #ecf0f1;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 30px;
+    width: 35%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    margin: 10px;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+}
+
+.feature-card h3 {
+    font-size: 1.5em;
+    color: #2C3E50;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    font-size: 1em;
+    color: #7f8c8d;
+}
+
+/* Legal Chatbot Section */
+.legal-chatbot {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f4f6f6;
+}
+
+.legal-chatbot h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.legal-chatbot p {
+    font-size: 1.2em;
+    color: #34495e;
+}
+
+/* Chatbot Floating Button */
+.cta-btn {
+    font-size: 18px;
+    padding: 12px 24px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cta-btn:hover {
+    background-color: #005599;
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Chatbot Avatar + Popup */
+.chatbot-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: fadeInSlide 0.6s ease forwards;
+}
+
+.chatbot-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #007BFF;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.chatbot-avatar:hover {
+    transform: scale(1.05);
+}
+
+.chatbot-popup {
+    background-color: #ffffff;
+    color: #333;
+    padding: 8px 14px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    white-space: nowrap;
+    max-width: 180px;
+    animation: popupSlide 0.4s ease-in-out;
+}
+
+@keyframes popupSlide {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+/* templates-section */
+.templates-section {
+    padding: 20px;
+    text-align: center;
+}
+
+.template-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px;
+    display: inline-block;
+    text-align: left;
+    width: 300px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.template-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.template-card a {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.template-card a:hover {
+    text-decoration: underline;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .features {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature-card {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .hero h1 {
+        font-size: 2em;
+    }
+
+    .cta-btn {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}

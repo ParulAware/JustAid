@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consultation</title>
+  <link rel="icon" href="C:\Users\skawa\OneDrive\Desktop\pbl\JUSTAID  LOGO.png" sizes="512x512" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.2;
+      margin: 0;
+      background-color: #f9fafb;
+      color: #003366;
+    }
+
+    header {
+      background-color: #003366;
+      padding: 15px 0;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav ul li {
+      margin: 0 18px;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .consult-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .consult-box h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      color: #003366;
+      font-weight: bold;
+    }
+
+    #lawyer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #lawyer-list li {
+      list-style: none;
+      background-color: #eef2ff;
+      border-left: 5px solid #003366;
+      padding: 12px 18px;
+      border-radius: 6px;
+      font-size: 1rem;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+        <img src="JUSTAID  LOGO.png" alt="JUSTAID">
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index1.html">Home</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="templates.html">Legal Templates</a></li>
+            <li><a href="consultation.html">Consultation</a></li>
+            
+            <!-- Updated Free Resources dropdown -->
+            <li class="dropdown">
+                <a href="#">Free Resources</a>
+                <ul>
+                    <li><a href="http://127.0.0.1:5001/">eBook</a></li>
+                    <li><a href="quiz.html">Quizzes</a></li>
+                    <li><a href="http://localhost:8000/rescue_mission.html">Game</a></li>
+
+                </ul>
+            </li>
+
+            <li><a href="aboutus.html">About Us</a></li>
+            <li><a href="logout.html">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+  <main>
+    <div class="consult-box">
+      <h1>Consult a Lawyer</h1>
+      <div id="lawyer-list"></div>
+    </div>
+  </main>
+
+  <script>
+    window.onload = function () {
+      const lawyerEmails = JSON.parse(localStorage.getItem("lawyerLogins")) || [];
+      const listContainer = document.getElementById("lawyer-list");
+
+      if (lawyerEmails.length === 0) {
+        listContainer.innerHTML = "<p>No lawyers are available for consultation right now.</p>";
+      } else {
+        const ul = document.createElement("ul");
+
+        lawyerEmails.forEach(email => {
+          const li = document.createElement("li");
+          li.textContent = email;
+          ul.appendChild(li);
+        });
+
+        listContainer.appendChild(ul);
+      }
+    }
+  </script>
+</body>
+</html>

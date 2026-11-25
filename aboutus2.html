@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="C:\Users\skawa\OneDrive\Desktop\pbl\JUSTAID  LOGO.png" sizes="512x512" />
+    <title>About Us - JustAid</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #003366;
+        }
+        .intro {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        .quote {
+            font-style: italic;
+            padding: 20px;
+            border-left: 5px solid #003366;
+            background-color: #eaf2f8;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .feature-card {
+            flex: 1 1 45%;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-card h3 {
+            margin-top: 0;
+            color: #003366;
+        }
+        .closing-box {
+            background-color: #003366;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .closing-box h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="JUSTAID  LOGO.png" alt="JUSTAID">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="templates.html">Legal Templates</a></li>
+                <li><a href="consultation.html">Consultation</a></li>
+                <!-- <li><a href="consultation.html">Consultation</a></li> -->
+                <li class="dropdown">
+                    <a href="#">Free Resources</a>
+                        <ul>
+                            <li><a href="index_new.html">eBook</a></li>
+                            <li><a href="quiz.html">Quizzes</a></li>
+                            <li><a href="http://localhost:8000/rescue_mission.html">Game</a></li>
+
+                        </ul>
+                </li>
+    
+                
+                <li><a href="logout.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <h1>About JustAid</h1>
+
+        <div class="intro">
+            <p>
+                <strong>JustAid</strong> started with a simple yet powerful idea:
+                <em>“Legal help should be accessible to everyone, not just the privileged.”</em>
+            </p>
+            <p>
+                Built by students, legal enthusiasts, and techies, JustAid is your one-stop legal guide — from AI-powered advice to real consultations.
+            </p>
+        </div>
+
+        <div class="quote">
+            “We believe justice should be simple, human, and within reach for all.”
+        </div>
+
+        <div class="features">
+
+            <div class="feature-card">
+                <h3>📄 Legal Templates</h3>
+                <p>Download free, verified legal documents — rental agreements, contracts, affidavits, and more.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>🧠 AI Legal Assistant</h3>
+                <p>Instant guidance on common legal issues — housing, employment, family disputes and more.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>👨‍⚖️ Verified Lawyers</h3>
+                <p>Connect with trusted lawyers for affordable consultation directly from the platform.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>💬 Real Conversations</h3>
+                <p>Ask questions, share concerns, and take control of your rights with full privacy.</p>
+            </div>
+
+        </div>
+
+        <div class="closing-box">
+            <h2>JustAid</h2>
+            <p>Your rights. Your voice. Your platform.</p>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="C:\Users\skawa\OneDrive\Desktop\pbl\JUSTAID  LOGO.png" sizes="512x512" />
+  <title>Legal Resource Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e8f0fe;
+      margin: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    select, input, button {
+      padding: 10px;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #1a73e8;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0c56d0;
+    }
+    #ebook-container {
+      margin-top: 20px;
+    }
+    #ebook-links li {
+      background: #f1f6ff;
+      padding: 12px 18px;
+      margin-bottom: 10px;
+      border-left: 5px solid #1a73e8;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    #ebook-links li a {
+      text-decoration: none;
+      color: #1a0dab;
+      font-weight: 500;
+    }
+    #ebook-links li a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Legal Resource Generator</h2>
+    <select id="resourceType">
+      <option value="ebook">eBook</option>
+    </select>
+    <input type="text" id="topic" placeholder="Enter a topic (e.g. Domestic Violence)">
+    <button onclick="generateResource()">Generate</button>
+
+    <div id="ebook-container"><ul id="ebook-links"></ul></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{ url_for('static', filename='script_new.js') }}"></script>
+</body>
+</html>

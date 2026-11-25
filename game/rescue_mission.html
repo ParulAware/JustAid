@@ -1,0 +1,404 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rescue Mission</title>
+    <link rel="stylesheet" href="game_styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Rescue Mission Game</h1>
+        <div class="instructions" id="instructions">
+            <p>Welcome to the Rescue Mission! Navigate through the tiles to reach the end, encountering legal scenarios along the way.</p>
+             <br>
+              <h2>Instructions</h2>
+    <ul>
+        <li>Start at the green tile and move to adjacent tiles only (up, down, left, right).</li>
+        <li>Some tiles contain scenarios that require you to answer legal questions.</li>
+        <li>Correct answers earn you points, and wrong answers may penalize your time.</li>
+        <li>Reach the yellow tile before time runs out to win!</li>
+    </ul>
+            <button id="start-game">Start Game</button>
+        </div>
+
+        <div id="game-container" class="hidden">
+            <div id="game-board"></div>
+            <div id="timer">Time Left: 60 seconds</div>
+            <div id="score">Score: 0/0</div>
+        </div>
+
+         Scenario Modal -->
+        <!-- <div id="scenario-modal" class="modal hidden">
+            <h2>Scenario</h2>
+            <p id="scenario-question"></p>
+            <ul id="scenario-options"></ul>
+            <p id="scenario-explanation" class="hidden"></p>
+            <button id="continue" class="hidden">Continue</button>
+        </div>
+
+        Final Score Modal -->
+        <!-- <div id="final-score-modal" class="modal hidden">
+            <h2>Game Over!</h2>
+            <p id="final-score"></p>
+            <button id="restart">Restart Game</button>
+        </div>
+    </div> -->
+
+    <!-- Scripts -->
+    <!-- <script src="game_scenarios.mjs"></script> -->
+    <!-- <script type="module" src="game_logic.mjs"></script>
+    <script> -->
+        <!-- // Event listener for Start Game button
+        document.getElementById("start-game").addEventListener("click", function() {
+            // Hide instructions
+            document.getElementById("instructions").classList.add("hidden");
+
+            // Show game container
+            document.getElementById("game-container").classList.remove("hidden");
+        });
+    </script>
+</body>
+</html> -->  
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rescue Mission</title>
+  <link rel="stylesheet" href="game_styles.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f0f8ff, #dbe9ff);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      grid-gap: 6px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .tile {
+      width: 60px;
+      height: 60px;
+      background-color: #ccc;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+
+    .tile.green {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .tile.yellow {
+      background-color: #f1c40f;
+      color: white;
+    }
+
+    .tile:hover {
+      transform: scale(1.05);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: left;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .instructions {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚨 Rescue Mission Game</h1>
+
+    <div class="instructions" id="instructions">
+      <p>Navigate through the tiles to reach the end, encountering legal scenarios along the way.</p>
+      <h3>Instructions:</h3>
+      <ul style="text-align: left; max-width: 600px; margin: auto;">
+        <li>Start at the green tile and move using arrow keys (↑ ↓ ← →).</li>
+        <li>Some tiles contain scenarios that require answers.</li>
+        <li>Earn points for correct answers, lose time for wrong ones.</li>
+        <li>Reach the yellow tile before time runs out.</li>
+      </ul>
+      <button id="start-game">Start Game</button>
+    </div>
+
+    <div id="game-container" class="hidden">
+      <div id="game-board"></div>
+      <div id="timer">Time Left: 300 seconds</div>
+      <div id="score">Score: 0/0</div>
+    </div>
+
+    <!-- Scenario Modal -->
+    <!-- <div id="scenario-modal" class="modal">
+      <div class="modal-content">
+        <h2>Scenario</h2>
+        <p id="scenario-question"></p>
+        <ul id="scenario-options"></ul>
+        <p id="scenario-explanation" class="hidden"></p>
+        <button id="continue" class="hidden">Continue</button>
+      </div>
+    </div>
+
+    <!-- Final Score Modal -->
+    <!-- <div id="final-score-modal" class="modal">
+      <div class="modal-content">
+        <h2>Game Over!</h2>
+        <p id="final-score"></p>
+        <button id="restart">Restart Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <!-- <script type="module" src="game_logic.mjs"></script>
+</body>
+</html> -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rescue Mission</title>
+  <link rel="stylesheet" href="game_styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🚨 Rescue Mission Game</h1> -->
+
+    <!-- Instructions Section -->
+    <!-- <div class="instructions" id="instructions">
+      <p>Navigate through the tiles to reach the end, encountering legal scenarios along the way.</p>
+      <h3>Instructions:</h3>
+      <ul style="text-align: left; max-width: 600px; margin: auto;">
+        <li>Start at the green tile and move using arrow keys (↑ ↓ ← →).</li>
+        <li>Some tiles contain scenarios that require answers.</li>
+        <li>Earn points for correct answers, lose time for wrong ones.</li>
+        <li>Reach the yellow tile before time runs out.</li>
+      </ul>
+      <button id="start-game">Start Game</button>
+    </div> -->
+
+    <!-- Game Area -->
+    <!-- <div id="game-container" class="hidden">
+      <div id="game-board"></div>
+      <div id="timer">Time Left: 300 seconds</div>
+      <div id="score">Score: 0/0</div>
+    </div> -->
+
+    <!-- Scenario Modal -->
+    <!-- <div id="scenario-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Scenario</h2>
+        <p id="scenario-question"></p>
+        <ul id="scenario-options"></ul>
+        <p id="scenario-explanation" class="hidden"></p>
+        <button id="continue" class="hidden">Continue</button>
+      </div>
+    </div> -->
+
+    <!-- Final Score Modal -->
+    <!-- <div id="final-score-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Game Over!</h2>
+        <p id="final-score"></p>
+        <button id="restart">Restart Game</button>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Scripts -->
+  <!-- <script type="module" src="game_logic.mjs"></script>
+</body>
+</html> -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rescue Mission</title>
+    <link rel="stylesheet" href="game_styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="game-title"> Rescue Mission Game </h1>
+        <div class="instructions" id="instructions">
+            <h2>Welcome to the Rescue Mission!</h2>
+            <p>Navigate through the tiles to reach the end, encountering legal scenarios along the way.</p>
+            <h3>Instructions</h3>
+            <ul style="color:rgb(80, 26, 217)">
+                <li>Start at the blue tile and move to adjacent tiles only (up, down, left, right).</li>
+                <li>Some tiles contain scenarios that require you to answer legal questions.</li>
+                <li>Correct answers earn you points, and wrong answers may penalize your time.</li>
+                <li>Reach the green tile before time runs out to win!</li>
+            </ul>
+            <button id="start-game">Start Game</button>
+        </div>
+
+        <div id="game-container" class="hidden">
+            <div id="game-board"></div>
+            <div id="game-info">
+                <div id="timer">⏳ Time Left: 60 seconds</div>
+                <div id="score">🏆 Score: 0/0</div>
+            </div>
+        </div>
+
+        <!-- Scenario Modal -->
+        <!-- <div id="scenario-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>📜 Scenario</h2>
+                <p id="scenario-question"></p>
+                <ul id="scenario-options"></ul>
+                <p id="scenario-explanation" class="hidden"></p>
+                <button id="continue" class="hidden">Continue</button>
+            </div>
+        </div> -->
+
+        <!-- Final Score Modal -->
+        <!-- <div id="final-score-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>🎉 Game Over!</h2>
+                <p id="final-score"></p>
+                <button id="restart">Restart Game</button>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Scripts -->
+    <!-- <script src="game_scenarios.mjs"></script>
+    <script type="module" src="game_logic.mjs"></script>
+</body>
+</html> --> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="C:\Users\skawa\OneDrive\Desktop\pbl\JUSTAID  LOGO.png" sizes="512x512" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rescue Mission</title>
+  <link rel="stylesheet" href="game_styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="game-title">Saforia</h1>
+
+    <!-- Instructions Section -->
+    <div class="instructions" id="instructions">
+      <h2>Welcome to the World of Safety + Euphoria !</h2>
+      <p>Navigate through the tiles to reach the end, encountering legal scenarios along the way.</p>
+      <h3>Instructions:</h3>
+      <ul style="color:rgb(80, 26, 217)">
+        <li>Start at the <strong>blue tile</strong> and move to adjacent tiles only (↑ ↓ ← →).</li>
+        <li>Some tiles contain scenarios that require you to answer legal questions.</li>
+        <li>Correct answers earn you points, and wrong answers may penalize your time.</li>
+        <li>Reach the <strong>green tile</strong> before time runs out to win!</li>
+      </ul>
+      <button id="start-game">Start Game</button>
+    </div>
+
+    <!-- Game Area -->
+    <div id="game-container" class="hidden">
+      <div id="game-board"></div>
+      <div id="game-info">
+        <div id="timer">⏳ Time Left: 300 seconds</div>
+        <div id="score">🏆 Score: 0/0</div>
+      </div>
+    </div>
+
+    <!-- Scenario Modal -->
+    <div id="scenario-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>📜 Scenario</h2>
+        <p id="scenario-question"></p>
+        <ul id="scenario-options"></ul>
+        <p id="scenario-explanation" class="hidden"></p>
+        <button id="continue" class="hidden">Continue</button>
+      </div>
+    </div>
+
+    <!-- Final Score Modal -->
+    <div id="final-score-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>🎉 Game Over!</h2>
+        <p id="final-score"></p>
+        <button id="restart">Restart Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="game_scenarios.mjs"></script>
+  <script type="module" src="game_logic.mjs"></script>
+</body>
+</html>
+

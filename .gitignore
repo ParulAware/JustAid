@@ -1,0 +1,33 @@
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment variables
+.env
+.env.local
+
+# AI model checkpoints and weights
+*.pt
+*.pth
+*.safetensors
+results/checkpoint-*/
+legalbert_finetuned/
+
+# Downloaded browser binaries
+chrome-headless-shell-win64/
+chromedriver.exe
+chromedriver-win64/
+
+# Node dependencies
+node_modules/
+
+# Build files
+dist/
+build/
+.next/
+
+# Logs
+*.log

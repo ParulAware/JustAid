@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="C:\Users\skawa\OneDrive\Desktop\pbl\JUSTAID  LOGO.png" sizes="512x512" />
+    <title>Logging Out...</title>
+    <style>
+        .logout-message {
+            text-align: center;
+            margin-top: 100px;
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logout-message">
+        <h2>You are being logged out...</h2>
+        <p>Please wait.</p>
+    </div>
+
+    <script>
+        sessionStorage.removeItem("loggedInUser");
+        window.location.href = "login.html";
+    </script>
+
+</body>
+</html>

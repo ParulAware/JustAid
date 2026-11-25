@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Indian Laws Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    #topic-selector, #level-selector, button { margin: 10px 0; padding: 10px 15px; border: none; border-radius: 5px; }
+    #topic-selector, #level-selector { background: #ffffff; cursor: pointer; }
+    button { background: #007BFF; color: white; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .quiz-box { background: white; padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .option { margin: 5px 0; }
+    #result { font-size: 1.2em; margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<h2>Quiz on Indian Laws</h2>
+
+<label for="topic-selector">Select Topic:</label>
+<select id="topic-selector" onchange="loadLevels()">
+  <option value="" selected disabled>Select a topic</option>
+  <option value="child_marriage">Child Marriage</option>
+  <option value="dowry">Dowry</option>
+  <option value="domestic_violence">Domestic Violence</option>
+  <option value="sexual_harassment">Sexual Harassment</option>
+  <option value="acid_attacks">Acid Attacks</option>
+  <option value="cyberbullying">Cyberbullying</option>
+  <option value="human_trafficking">Human Trafficking</option>
+  <option value="female_infanticide">Female Infanticide</option>
+  <option value="workplace_rights">Workplace Rights</option>
+</select>
+
+<label for="level-selector" style="display:none;">Select Level:</label>
+<select id="level-selector" style="display:none;" onchange="loadQuiz()">
+  <option value="" selected disabled>Select a level</option>
+  <option value="easy">Easy</option>
+  <option value="medium">Medium</option>
+  <option value="hard">Hard</option>
+</select>
+
+<div id="quiz-container"></div>
+<button onclick="submitQuiz()" style="display:none;">Submit Quiz</button>
+<div id="result"></div>
+
+<script>
+  // Quiz Data: Topics, Levels, and Questions
+  const quizData = {
+    child_marriage: {
+    easy: [
+      { scenario: "At what age is marriage legally prohibited for girls?", options: ["Below 18 years", "Below 21 years"], correct: "Below 18 years" },
+      { scenario: "Which act regulates child marriage in India?", options: ["Prohibition of Child Marriage Act, 2006", "Domestic Violence Act, 2005"], correct: "Prohibition of Child Marriage Act, 2006" },
+      { scenario: "Who can file a complaint under the Prohibition of Child Marriage Act?", options: ["Parents", "Police", "Any citizen"], correct: "Any citizen" },
+      { scenario: "What is the punishment for child marriage in India?", options: ["Up to 2 years imprisonment", "Up to 5 years imprisonment", "No punishment"], correct: "Up to 2 years imprisonment" },
+      { scenario: "Which section of the Prohibition of Child Marriage Act allows for the annulment of child marriage?", options: ["Section 3", "Section 12", "Section 10"], correct: "Section 12" },
+      { scenario: "Who is responsible for reporting child marriages?", options: ["Parents", "Police", "Any citizen"], correct: "Any citizen" },
+      { scenario: "Can a minor girl seek the annulment of a child marriage?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Which age of the boy is considered to be the legal minimum age for marriage under Indian law?", options: ["18 years", "21 years", "25 years"], correct: "21 years" },
+      { scenario: "Can a marriage be annulled if one of the parties is underage?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Is child marriage common in rural India?", options: ["Yes", "No"], correct: "Yes" }
+    ],
+    medium: [
+      { scenario: "Who is penalized for arranging a child marriage?", options: ["Parents", "Priest or solemnizer", "Both"], correct: "Both" },
+      { scenario: "What is the punishment for promoting child marriage?", options: ["Fine of ₹1 Lakh", "Imprisonment up to 2 years", "Both"], correct: "Both" },
+      { scenario: "What is the age for marriage under the Prohibition of Child Marriage Act, 2006 for boys?", options: ["Below 18 years", "Below 21 years", "Below 25 years"], correct: "Below 21 years" },
+      { scenario: "Which court can declare a child marriage void?", options: ["Family Court", "District Court", "Supreme Court"], correct: "Family Court" },
+      { scenario: "What is the minimum age for marriage for a girl under Indian law?", options: ["16 years", "18 years", "21 years"], correct: "18 years" },
+      { scenario: "Which ministry is responsible for enforcing the Prohibition of Child Marriage Act?", options: ["Ministry of Women and Child Development", "Ministry of Home Affairs", "Ministry of Education"], correct: "Ministry of Women and Child Development" },
+      { scenario: "What is the penalty for parents who force their daughter into child marriage?", options: ["2 years imprisonment", "5 years imprisonment", "1 year imprisonment"], correct: "2 years imprisonment" },
+      { scenario: "Which is an example of a violation of the Prohibition of Child Marriage Act?", options: ["A 16-year-old girl gets married", "A 19-year-old girl marries an 18-year-old boy", "Both"], correct: "A 16-year-old girl gets married" }
+    ],
+    hard: [
+      { scenario: "Which section allows child marriage to be declared void?", options: ["Section 12", "Section 9"], correct: "Section 12" },
+      { scenario: "Which international convention addresses child marriage?", options: ["CEDAW", "CRC", "UDHR"], correct: "CEDAW" },
+      { scenario: "What is the penalty for forcing a minor into marriage?", options: ["Fine of ₹5 Lakh", "Imprisonment up to 10 years", "Both"], correct: "Imprisonment up to 10 years" },
+      { scenario: "What is the minimum age for marriage under the Juvenile Justice Act?", options: ["18 years", "21 years", "20 years"], correct: "18 years" },
+      { scenario: "Which of the following laws applies in cases where a child marriage occurs?", options: ["Protection of Children from Sexual Offenses Act", "Juvenile Justice Act", "Both"], correct: "Both" },
+      { scenario: "What is the role of the National Commission for Protection of Child Rights (NCPCR) in child marriage cases?", options: ["Monitoring and preventing child marriages", "Providing legal aid to victims", "Both"], correct: "Both" },
+      { scenario: "How long does a child marriage annulment take to process in court?", options: ["1 month", "3 months", "6 months"], correct: "3 months" },
+      { scenario: "Which of these are often the consequences of child marriages?", options: ["Early pregnancy", "Health risks", "Educational disruption", "All of the above"], correct: "All of the above" }
+    ]
+  },
+   dowry: {
+  easy: [
+    { scenario: "Which Act addresses dowry harassment in India?", options: ["Dowry Prohibition Act, 1961", "Protection of Women from Domestic Violence Act, 2005"], correct: "Dowry Prohibition Act, 1961" },
+    { scenario: "What is the punishment for giving or receiving dowry under Indian law?", options: ["1 year imprisonment", "3 years imprisonment", "5 years imprisonment"], correct: "5 years imprisonment" },
+    { scenario: "Can a woman file a complaint of dowry harassment after marriage?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What is the minimum imprisonment for dowry harassment?", options: ["1 year", "3 years", "5 years"], correct: "3 years" },
+    { scenario: "Which of the following is considered dowry harassment?", options: ["Physical abuse", "Verbal abuse", "Demand for money", "All of the above"], correct: "All of the above" }
+  ],
+  medium: [
+    { scenario: "Who can file a complaint under the Dowry Prohibition Act?", options: ["Only married women", "Any woman", "Anyone who has witnessed it"], correct: "Any woman" },
+    { scenario: "Can dowry harassment lead to a woman's arrest?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Which authority investigates dowry harassment cases?", options: ["Police", "Social worker", "Magistrate"], correct: "Police" },
+    { scenario: "What are the possible punishments for dowry harassment under the Indian Penal Code?", options: ["1-3 years imprisonment", "3-5 years imprisonment", "10 years imprisonment"], correct: "3-5 years imprisonment" },
+    { scenario: "What kind of evidence can be used in dowry harassment cases?", options: ["Video recordings", "Witness testimony", "Written communication", "All of the above"], correct: "All of the above" }
+  ],
+  hard: [
+    { scenario: "What does Section 498A of the Indian Penal Code deal with?", options: ["Dowry harassment", "Sexual harassment", "Child abuse", "Domestic violence"], correct: "Dowry harassment" },
+    { scenario: "Which is the penalty for demanding dowry under the Dowry Prohibition Act?", options: ["1-2 years imprisonment", "3 years imprisonment", "5 years imprisonment"], correct: "3 years imprisonment" },
+    { scenario: "Can a man be punished under the Dowry Prohibition Act?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Can dowry harassment cases be filed even after divorce?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Which of the following is a defense against a dowry harassment charge?", options: ["Proving it was a misunderstanding", "Proving the demand was for personal reasons", "None"], correct: "None" }
+  ]
+}
+,
+    domestic_violence: {
+  easy: [
+    { scenario: "Which act addresses domestic violence against women in India?", options: ["Protection of Women from Domestic Violence Act, 2005", "Dowry Prohibition Act, 1961"], correct: "Protection of Women from Domestic Violence Act, 2005" },
+    { scenario: "What is the maximum punishment for domestic violence under Indian law?", options: ["2 years imprisonment", "5 years imprisonment", "10 years imprisonment"], correct: "5 years imprisonment" },
+    { scenario: "Who can file a complaint under the Domestic Violence Act?", options: ["Only married women", "Any woman", "Only those with children"], correct: "Any woman" },
+    { scenario: "What is the first step for a woman filing a domestic violence complaint?", options: ["File an FIR", "File a complaint with the police", "File a complaint with the magistrate"], correct: "File a complaint with the magistrate" },
+    { scenario: "Can a woman get protection from the abuser under the Domestic Violence Act?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What kind of protection can a woman seek under the Domestic Violence Act?", options: ["Residence orders", "Monetary relief", "Both"], correct: "Both" },
+    { scenario: "Can a woman get custody of her children under the Domestic Violence Act?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What does the Domestic Violence Act aim to protect women from?", options: ["Physical abuse", "Emotional abuse", "Sexual abuse", "All of the above"], correct: "All of the above" },
+    { scenario: "What is the time limit for a woman to file a complaint under the Domestic Violence Act?", options: ["6 months", "1 year", "3 years"], correct: "3 years" },
+    { scenario: "Which authority is responsible for enforcing the Domestic Violence Act?", options: ["Police", "Magistrate", "Protection Officer"], correct: "Magistrate" }
+  ],
+  medium: [
+    { scenario: "Who can file a complaint under the Domestic Violence Act?", options: ["Only married women", "Any woman", "Only those with children"], correct: "Any woman" },
+    { scenario: "What is the first step for a woman filing a domestic violence complaint?", options: ["File an FIR", "File a complaint with the police", "File a complaint with the magistrate"], correct: "File a complaint with the magistrate" },
+    { scenario: "What is the role of the Protection Officer under the Domestic Violence Act?", options: ["Assist the complainant", "Report the case to the police", "Both"], correct: "Both" },
+    { scenario: "Under the Domestic Violence Act, what is the maximum period of time for the protection orders?", options: ["1 year", "2 years", "3 years"], correct: "2 years" },
+    { scenario: "Under the Domestic Violence Act, which of the following is considered an act of domestic violence?", options: ["Physical harm", "Mental cruelty", "Economic abuse", "All of the above"], correct: "All of the above" },
+    { scenario: "What is the maximum monetary relief a woman can get under the Domestic Violence Act?", options: ["₹10,000", "₹50,000", "₹1,00,000"], correct: "₹20,000 per month" },
+    { scenario: "Which of the following is NOT a form of domestic violence under the Domestic Violence Act?", options: ["Verbal abuse", "Physical abuse", "Financial independence", "Sexual abuse"], correct: "Financial independence" },
+    { scenario: "Who has the right to reside in a shared household under the Domestic Violence Act?", options: ["Only the wife", "Any woman in a relationship", "Any family member"], correct: "Any woman in a relationship" },
+    { scenario: "Can a woman obtain compensation for emotional distress under the Domestic Violence Act?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Can a man file a complaint of domestic violence under the Domestic Violence Act?", options: ["Yes", "No"], correct: "Yes" }
+  ],
+  hard: [
+    { scenario: "What is the role of the Protection Officer under the Domestic Violence Act?", options: ["Assist the complainant", "Report the case to the police", "Both"], correct: "Both" },
+    { scenario: "Under the Domestic Violence Act, which authority can issue protection orders?", options: ["Magistrate", "Police", "Court"], correct: "Magistrate" },
+    { scenario: "What is the punishment for violation of a protection order under the Domestic Violence Act?", options: ["1 year imprisonment", "Up to 3 years imprisonment", "Fine"], correct: "Up to 3 years imprisonment" },
+    { scenario: "Under the Domestic Violence Act, a woman can seek relief in case of which kind of abuse?", options: ["Sexual", "Physical", "Emotional", "All of the above"], correct: "All of the above" },
+    { scenario: "What is the role of the court in the enforcement of orders under the Domestic Violence Act?", options: ["Provide protection", "Provide compensation", "Both", "None of the above"], correct: "Both" },
+    { scenario: "Who can be charged under the Domestic Violence Act?", options: ["Only the husband", "The husband and in-laws", "Only the wife"], correct: "The husband and in-laws" },
+    { scenario: "What is the duration of a protection order under the Domestic Violence Act?", options: ["1 year", "2 years", "Indefinite"], correct: "Indefinite" },
+    { scenario: "Which of the following is NOT considered a form of domestic violence?", options: ["Threatening", "Emotional abuse", "Mental support", "Physical harm"], correct: "Mental support" },
+    { scenario: "What does the Domestic Violence Act allow women to claim from their abuser?", options: ["Alimony", "Monetary relief", "Custody of children", "All of the above"], correct: "All of the above" },
+    { scenario: "Under the Domestic Violence Act, what kind of abuse can lead to a protection order?", options: ["Physical abuse", "Sexual abuse", "Emotional abuse", "All of the above"], correct: "All of the above" }
+  ]
+}
+,
+    acid_attacks: {
+  easy: [
+    { scenario: "What is an acid attack?", options: ["Throwing acid on someone", "Verbal harassment", "Financial exploitation"], correct: "Throwing acid on someone" },
+    { scenario: "Which law deals with acid attacks in India?", options: ["The Indian Penal Code", "The Protection of Women from Domestic Violence Act", "The Acid Attack Law"], correct: "The Indian Penal Code" },
+    { scenario: "What is the punishment for acid attack under IPC?", options: ["Life imprisonment", "5 years imprisonment", "Death penalty"], correct: "Life imprisonment" },
+    { scenario: "Acid attacks are primarily targeted at which gender?", options: ["Women", "Men", "Children"], correct: "Women" },
+    { scenario: "Is acid attack a form of gender-based violence?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Can victims of acid attacks claim compensation?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What does the Acid Attack Law focus on?", options: ["Regulating acid sale", "Protecting women from domestic violence", "Punishing offenders of acid attacks"], correct: "Regulating acid sale" },
+    { scenario: "Can the acid attack victim file a complaint immediately?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Is the selling of acid without a license illegal?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What is a major consequence for the accused in acid attack cases?", options: ["Imprisonment", "Fines", "Both"], correct: "Both" }
+  ],
+  medium: [
+    { scenario: "What are the primary reasons for acid attacks?", options: ["Revenge", "Financial issues", "Emotional distress"], correct: "Revenge" },
+    { scenario: "What is the minimum punishment for acid attack under Section 326B IPC?", options: ["5 years imprisonment", "10 years imprisonment", "Life imprisonment"], correct: "10 years imprisonment" },
+    { scenario: "Which section of the IPC covers acid attacks?", options: ["Section 307", "Section 326B", "Section 376"], correct: "Section 326B" },
+    { scenario: "Under the Nirbhaya Fund, what assistance is provided to acid attack victims?", options: ["Financial assistance", "Legal support", "Both"], correct: "Both" },
+    { scenario: "What is a major legal challenge in acid attack cases?", options: ["Evidence collection", "Proving intent", "Both"], correct: "Both" },
+    { scenario: "What should a victim do immediately after an acid attack?", options: ["Report to police", "Seek medical help", "Both"], correct: "Both" },
+    { scenario: "Are acid attack victims entitled to free medical treatment?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What can acid attack victims seek compensation for?", options: ["Medical expenses", "Psychological rehabilitation", "Both"], correct: "Both" },
+    { scenario: "Are acid attacks considered premeditated crimes?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Which of these is considered a common target for acid attacks?", options: ["Women", "Men", "Children"], correct: "Women" }
+  ],
+  hard: [
+    { scenario: "What was the landmark case in acid attack jurisprudence in India?", options: ["Laxmi vs. Union of India", "Shreya Singhal vs. Union of India", "Rajeshwari vs. Union of India"], correct: "Laxmi vs. Union of India" },
+    { scenario: "What is the role of police in acid attack cases?", options: ["Investigating the case", "Providing compensation", "Offering medical help"], correct: "Investigating the case" },
+    { scenario: "Which organization supports acid attack victims in India?", options: ["Laxmi Foundation", "National Commission for Women", "Legal Aid Society"], correct: "Laxmi Foundation" },
+    { scenario: "Can acid attacks be categorized as attempted murder?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What happens if an acid attack results in permanent disability?", options: ["The offender is charged with murder", "The punishment is aggravated", "The victim receives special compensation"], correct: "The punishment is aggravated" },
+    { scenario: "What is the primary challenge for acid attack victims in terms of justice?", options: ["Proving the identity of the attacker", "Proving physical harm", "Access to legal representation"], correct: "Proving the identity of the attacker" },
+    { scenario: "What type of compensation is available for acid attack victims?", options: ["Emergency financial aid", "Permanent disability benefits", "Both"], correct: "Both" },
+    { scenario: "Which of these sections is particularly important for acid attack cases?", options: ["Section 357 IPC", "Section 326B IPC", "Section 482 IPC"], correct: "Section 326B IPC" },
+    { scenario: "How does the court differentiate between an acid attack and a regular assault?", options: ["Severity of injury", "Use of acid", "Intention to cause harm"], correct: "Use of acid" },
+    { scenario: "What long-term support is necessary for acid attack victims?", options: ["Medical treatment", "Psychological support", "Both"], correct: "Both" }
+  ]
+},
+
+cyberbullying: {
+  easy: [
+    { scenario: "What is cyberbullying?", options: ["Bullying in person", "Online harassment", "Both"], correct: "Online harassment" },
+    { scenario: "Which platform is commonly used for cyberbullying?", options: ["Social media", "Emails", "Both"], correct: "Both" },
+    { scenario: "Who can be a victim of cyberbullying?", options: ["Only adults", "Only teenagers", "Anyone"], correct: "Anyone" },
+    { scenario: "Is cyberbullying punishable by law in India?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What is the first step if someone is being cyberbullied?", options: ["Ignore it", "Report to the authorities", "Engage with the bully"], correct: "Report to the authorities" },
+    { scenario: "Which act governs cyberbullying in India?", options: ["The IT Act, 2000", "The Indian Penal Code", "The Protection of Women from Domestic Violence Act"], correct: "The IT Act, 2000" },
+    { scenario: "What is the punishment for cyberbullying under Section 66A of the IT Act?", options: ["Fine", "Imprisonment", "Both"], correct: "Both" },
+    { scenario: "Is online defamation a form of cyberbullying?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Can a victim of cyberbullying seek legal help?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Which of these is a form of cyberbullying?", options: ["Trolling", "Phishing", "Both"], correct: "Both" }
+  ],
+  medium: [
+    { scenario: "How can someone protect themselves from cyberbullying?", options: ["Use privacy settings", "Avoid interacting with strangers online", "Both"], correct: "Both" },
+    { scenario: "What is the primary objective of a cyberbully?", options: ["To spread positivity", "To harm the victim", "To entertain"], correct: "To harm the victim" },
+    { scenario: "What is the punishment for sending threatening emails under the IT Act?", options: ["Up to 2 years imprisonment", "Up to 3 years imprisonment", "Up to 5 years imprisonment"], correct: "Up to 3 years imprisonment" },
+    { scenario: "Can cyberbullying occur through fake social media profiles?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What role do social media platforms have in preventing cyberbullying?", options: ["Monitoring content", "Taking down abusive posts", "Both"], correct: "Both" },
+    { scenario: "Which section of the Indian Penal Code addresses online defamation?", options: ["Section 66A", "Section 499", "Section 503"], correct: "Section 499" },
+    { scenario: "What should parents do if their child is a victim of cyberbullying?", options: ["Report the issue to authorities", "Punish the child", "Ignore it"], correct: "Report the issue to authorities" },
+    { scenario: "What is the key feature of cyberbullying?", options: ["It happens in person", "It happens via the internet", "It happens via phone calls"], correct: "It happens via the internet" },
+    { scenario: "Is revenge porn considered a form of cyberbullying?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "How can a victim of cyberbullying collect evidence?", options: ["Screenshots", "Save chats", "Both"], correct: "Both" }
+  ],
+  hard: [
+    { scenario: "What is the legal action taken for cyberstalking in India?", options: ["Imprisonment", "Fines", "Both"], correct: "Both" },
+    { scenario: "What does Section 66C of the IT Act criminalize?", options: ["Identity theft", "Cyberbullying", "Child pornography"], correct: "Identity theft" },
+    { scenario: "What is the role of the National Cyber Crime Reporting Portal?", options: ["Reporting crimes", "Investigating crimes", "Providing legal advice"], correct: "Reporting crimes" },
+    { scenario: "Which section of the IT Act addresses cyberbullying through email?", options: ["Section 66A", "Section 66E", "Section 66F"], correct: "Section 66A" },
+    { scenario: "What is a key challenge in prosecuting cyberbullying cases?", options: ["Anonymity of the bully", "Lack of evidence", "Both"], correct: "Both" },
+    { scenario: "Which of these behaviors is commonly associated with cyberbullying?", options: ["Trolling", "Blackmailing", "Both"], correct: "Both" },
+    { scenario: "What is the punishment for distributing obscene material under the IT Act?", options: ["Up to 5 years imprisonment", "Up to 3 years imprisonment", "Up to 7 years imprisonment"], correct: "Up to 5 years imprisonment" },
+    { scenario: "Can a victim of cyberbullying file an FIR?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What steps can the government take to prevent cyberbullying?", options: ["Create awareness", "Enforce strict laws", "Both"], correct: "Both" },
+    { scenario: "What is the term 'cyberbullying' defined under?", options: ["Indian Penal Code", "The IT Act, 2000", "Both"], correct: "The IT Act, 2000" }
+  ]
+},
+  
+human_trafficking: {
+    easy: [
+      { scenario: "What does human trafficking involve?", options: ["Recruitment, transportation, and exploitation of individuals", "Providing employment opportunities", "Offering educational scholarships"], correct: "Recruitment, transportation, and exploitation of individuals" },
+      { scenario: "Which Indian law primarily addresses human trafficking?", options: ["The Immoral Traffic (Prevention) Act, 1956", "The Indian Penal Code, 1860", "The Protection of Children from Sexual Offences Act, 2012"], correct: "The Immoral Traffic (Prevention) Act, 1956" },
+      { scenario: "Under which article of the Indian Constitution is human trafficking prohibited?", options: ["Article 23", "Article 21", "Article 19"], correct: "Article 23" },
+      { scenario: "Is bonded labor considered a form of human trafficking?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Which government body in India addresses human trafficking issues?", options: ["Ministry of Home Affairs", "Ministry of External Affairs", "Ministry of Women and Child Development"], correct: "Ministry of Home Affairs" },
+      { scenario: "Can victims of human trafficking receive legal protection in India?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Is trafficking for sexual exploitation illegal in India?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Are there specific laws in India to prevent child trafficking?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Does India have international agreements to combat human trafficking?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Can individuals be trafficked for labor exploitation in India?", options: ["Yes", "No"], correct: "Yes" }
+    ],
+    medium: [
+      { scenario: "Which section of the Indian Penal Code criminalizes trafficking offenses?", options: ["Section 370", "Section 376", "Section 420"], correct: "Section 370" },
+      { scenario: "What is the minimum punishment for trafficking under Section 370 IPC?", options: ["Seven years imprisonment", "Five years imprisonment", "Ten years imprisonment"], correct: "Seven years imprisonment" },
+      { scenario: "Are there specialized law enforcement units to handle trafficking cases in India?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Does the Immoral Traffic (Prevention) Act, 1956 focus solely on sexual exploitation?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "What is the role of the Anti-Trafficking Cell in India?", options: ["Address law enforcement responses to trafficking", "Provide victim rehabilitation services", "Conduct public awareness campaigns"], correct: "Address law enforcement responses to trafficking" },
+      { scenario: "Can victims of trafficking in India access rehabilitation services?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Are there provisions in Indian law to protect witnesses in trafficking cases?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Is there a national database for tracking trafficking cases in India?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Do Indian laws provide for the confiscation of assets from traffickers?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Are there NGOs in India that assist trafficking victims?", options: ["Yes", "No"], correct: "Yes" }
+    ],
+    hard: [
+      { scenario: "Which international protocol has India ratified to prevent human trafficking?", options: ["The Palermo Protocol", "The Hague Convention", "The Geneva Convention"], correct: "The Palermo Protocol" },
+      { scenario: "What is the primary challenge in prosecuting trafficking cases in India?", options: ["Victim reluctance to testify", "Lack of evidence", "Both A and B"], correct: "Both A and B" },
+      { scenario: "Does India have a national action plan to combat human trafficking?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Are there specific laws addressing the trafficking of women and children in India?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "What is the role of the National Human Rights Commission concerning trafficking?", options: ["Monitor and investigate trafficking cases", "Provide legal aid to victims", "Both A and B"], correct: "Both A and B" },
+      { scenario: "Has India established special courts to expedite trafficking trials?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "Are there bilateral agreements between India and neighboring countries to prevent trafficking?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "What measures are in place to prevent the trafficking of migrant workers in India?", options: ["Pre-departure orientation programs", "Strict recruitment agency regulations", "Both A and B"], correct: "Both A and B" },
+      { scenario: "Is there a dedicated fund in India for the rehabilitation of trafficking victims?", options: ["Yes", "No"], correct: "Yes" },
+      { scenario: "How does the judiciary in India handle cases involving transnational trafficking?", options: ["Through special tribunals", "Under regular criminal procedures", "By collaborating with international courts"], correct: "Under regular criminal procedures" }
+    ]
+  },
+
+female_infanticide: {
+  easy: [
+    { scenario: "What is female infanticide?", options: ["The act of aborting a female fetus", "The killing of a female infant after birth", "Both A and B"], correct: "Both A and B" },
+    { scenario: "Which Indian law specifically addresses female infanticide?", options: ["The Pre-Conception and Pre-Natal Diagnostic Techniques Act, 1994", "The Indian Penal Code, 1860", "The Protection of Children from Sexual Offences Act, 2012"], correct: "The Pre-Conception and Pre-Natal Diagnostic Techniques Act, 1994" },
+    { scenario: "What does the Pre-Conception and Pre-Natal Diagnostic Techniques Act, 1994 prohibit?", options: ["Sex-selective abortions", "Sale of infant girls", "Early marriage of girls"], correct: "Sex-selective abortions" },
+    { scenario: "Is female infanticide illegal in India?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What punishment does the law provide for those committing female infanticide?", options: ["Imprisonment for life", "Death penalty", "Seven years imprisonment"], correct: "Imprisonment for life" },
+    { scenario: "Does the law allow the use of ultrasound to determine the sex of a fetus?", options: ["Yes", "No"], correct: "No" },
+    { scenario: "Which body enforces laws against female infanticide in India?", options: ["Ministry of Health and Family Welfare", "Ministry of Women and Child Development", "Ministry of Home Affairs"], correct: "Ministry of Health and Family Welfare" },
+    { scenario: "What is the primary cause of female infanticide in India?", options: ["Cultural preference for sons", "Poverty", "Lack of education"], correct: "Cultural preference for sons" },
+    { scenario: "Is there a significant gender imbalance in India due to female infanticide?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What can be done to reduce female infanticide in India?", options: ["Strict enforcement of laws", "Awareness campaigns", "Both A and B"], correct: "Both A and B" }
+  ],
+  medium: [
+    { scenario: "Which section of the Indian Penal Code deals with the crime of female infanticide?", options: ["Section 302", "Section 304", "Section 315"], correct: "Section 315" },
+    { scenario: "Does India have laws for the protection of the rights of the girl child?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What is the impact of female infanticide on society?", options: ["Gender imbalance", "Increase in population", "Decrease in female literacy"], correct: "Gender imbalance" },
+    { scenario: "Which organization helps in monitoring female infanticide cases in India?", options: ["National Commission for Women", "National Human Rights Commission", "UNICEF"], correct: "National Commission for Women" },
+    { scenario: "What measures have been introduced to prevent female infanticide in India?", options: ["Awareness campaigns", "Stricter laws", "Both A and B"], correct: "Both A and B" },
+    { scenario: "What is the penalty for conducting a sex determination test in India?", options: ["Fine", "Imprisonment", "Both A and B"], correct: "Both A and B" },
+    { scenario: "What is the role of the Pre-Conception and Pre-Natal Diagnostic Techniques Act?", options: ["Regulating the use of prenatal diagnostic tests", "Promoting female education", "Encouraging balanced sex ratios"], correct: "Regulating the use of prenatal diagnostic tests" },
+    { scenario: "What effect does female infanticide have on the female population in India?", options: ["Decreases the female population", "Increases the female population", "No effect on the female population"], correct: "Decreases the female population" },
+    { scenario: "Are there any campaigns focused on reducing female infanticide in India?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "How can society help reduce female infanticide?", options: ["Promoting gender equality", "Educating parents", "Both A and B"], correct: "Both A and B" }
+  ],
+  hard: [
+    { scenario: "What is the root cause of female infanticide in rural areas of India?", options: ["Cultural preference for sons", "Illiteracy", "Gender-based violence"], correct: "Cultural preference for sons" },
+    { scenario: "Which international convention has India ratified to ensure the rights of the girl child?", options: ["The Convention on the Rights of the Child", "The Universal Declaration of Human Rights", "The Beijing Platform for Action"], correct: "The Convention on the Rights of the Child" },
+    { scenario: "What is the effect of female infanticide on the sex ratio in India?", options: ["Significant male skew", "Balanced sex ratio", "Female skew"], correct: "Significant male skew" },
+    { scenario: "Has India made any progress in reducing female infanticide over the last decade?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What is the role of the National Human Rights Commission regarding female infanticide?", options: ["Monitor gender equality", "Provide legal aid", "Both A and B"], correct: "Both A and B" },
+    { scenario: "What challenge do authorities face in prosecuting female infanticide cases?", options: ["Lack of evidence", "Cultural acceptance", "Lack of witnesses"], correct: "Both A and B" },
+    { scenario: "How does the Indian government plan to tackle female infanticide in the future?", options: ["Through better enforcement", "By promoting gender equality", "Both A and B"], correct: "Both A and B" },
+    { scenario: "Has the Indian judiciary established any specialized courts for female infanticide cases?", options: ["Yes", "No"], correct: "No" },
+    { scenario: "What preventive measures are being taken to reduce female infanticide in India?", options: ["Awareness campaigns", "Government regulations", "Both A and B"], correct: "Both A and B" },
+    { scenario: "How does the Indian Penal Code address female infanticide?", options: ["Through penalties", "By recognizing it as murder", "By offering rehabilitation to offenders"], correct: "By recognizing it as murder" }
+  ]
+},
+
+workplace_rights: {
+  easy: [
+    { scenario: "What is the main purpose of workplace rights?", options: ["To protect employees from exploitation", "To promote workplace efficiency", "To regulate salaries"], correct: "To protect employees from exploitation" },
+    { scenario: "Which Indian law protects employees from unfair labor practices?", options: ["The Industrial Disputes Act, 1947", "The Factories Act, 1948", "The Equal Remuneration Act, 1976"], correct: "The Industrial Disputes Act, 1947" },
+    { scenario: "Is sexual harassment at the workplace illegal in India?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Which law specifically addresses sexual harassment at the workplace in India?", options: ["The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013", "The Industrial Disputes Act, 1947", "The Equal Remuneration Act, 1976"], correct: "The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013" },
+    { scenario: "Can employees take legal action against workplace discrimination in India?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Which Indian law ensures equal pay for equal work?", options: ["The Equal Remuneration Act, 1976", "The Payment of Wages Act, 1936", "The Minimum Wages Act, 1948"], correct: "The Equal Remuneration Act, 1976" },
+    { scenario: "What is the primary aim of labor laws in India?", options: ["Regulate working conditions", "Ensure employee rights", "Both A and B"], correct: "Both A and B" },
+    { scenario: "Does India have laws against child labor?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Is forced labor allowed under Indian law?", options: ["Yes", "No"], correct: "No" },
+    { scenario: "Are maternity benefits available to working women in India?", options: ["Yes", "No"], correct: "Yes" }
+  ],
+  medium: [
+    { scenario: "What is the minimum wage fixed by the government of India?", options: ["Varies by state", "Fixed nationwide", "Based on sector"], correct: "Varies by state" },
+    { scenario: "What does the Industrial Disputes Act, 1947 address?", options: ["Employment disputes", "Disciplinary actions", "Wages"], correct: "Employment disputes" },
+    { scenario: "Does the law provide for the right to form unions?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Which law protects employees from unfair dismissal in India?", options: ["The Industrial Disputes Act, 1947", "The Payment of Wages Act, 1936", "The Trade Unions Act, 1926"], correct: "The Industrial Disputes Act, 1947" },
+    { scenario: "What is the role of the Factories Act, 1948?", options: ["Regulating health and safety in factories", "Setting wage standards", "Protecting the rights of child laborers"], correct: "Regulating health and safety in factories" },
+    { scenario: "Does Indian law allow for paid sick leave?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Are workers entitled to compensation for workplace injuries?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What is the role of labor courts in India?", options: ["Resolve disputes between workers and employers", "Protect worker rights", "Both A and B"], correct: "Both A and B" },
+    { scenario: "Are there any protections against discrimination at work in India?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Can women be discriminated against in the workplace in India?", options: ["Yes", "No"], correct: "No" }
+  ],
+  hard: [
+    { scenario: "What is the role of the National Commission for Women regarding workplace rights?", options: ["Advocates for women's rights", "Handles workplace complaints", "Both A and B"], correct: "Both A and B" },
+    { scenario: "Which law mandates the establishment of grievance redressal mechanisms at the workplace?", options: ["The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013", "The Industrial Disputes Act, 1947", "The Equal Remuneration Act, 1976"], correct: "The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013" },
+    { scenario: "How does the Indian law define 'forced labor'?", options: ["Labor done under threat", "Labor done voluntarily", "Labor done under contract"], correct: "Labor done under threat" },
+    { scenario: "Which international convention has India ratified to prevent discrimination at work?", options: ["International Labour Organization (ILO) Convention No. 111", "The Universal Declaration of Human Rights", "The Geneva Convention"], correct: "International Labour Organization (ILO) Convention No. 111" },
+    { scenario: "What does the Equal Remuneration Act, 1976 aim to eliminate?", options: ["Discrimination in wages based on gender", "Unequal work conditions", "Child labor"], correct: "Discrimination in wages based on gender" },
+    { scenario: "What does the Trade Unions Act, 1926 ensure?", options: ["Right to form unions", "Right to negotiate wages", "Both A and B"], correct: "Both A and B" },
+    { scenario: "Is forced overtime allowed under Indian law?", options: ["Yes", "No"], correct: "No" },
+    { scenario: "Does Indian law provide for the right to retirement benefits?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "Are there laws that ensure the right to paid leave in India?", options: ["Yes", "No"], correct: "Yes" },
+    { scenario: "What impact does the Protection of Women from Sexual Harassment at Workplace Act have?", options: ["Promotes a safe working environment for women", "Encourages sexual harassment", "Both A and B"], correct: "Promotes a safe working environment for women" }
+  ]
+}
+
+  };
+
+  function loadLevels() {
+    const levelSelector = document.getElementById("level-selector");
+    levelSelector.style.display = "block";
+  }
+
+  function loadQuiz() {
+    const topic = document.getElementById("topic-selector").value;
+    const level = document.getElementById("level-selector").value;
+    const quizContainer = document.getElementById("quiz-container");
+    const submitButton = document.querySelector("button");
+
+    quizContainer.innerHTML = "";
+    submitButton.style.display = "block";
+
+    const questions = quizData[topic][level];
+    questions.forEach((q, index) => {
+      quizContainer.innerHTML += `
+        <div class="quiz-box">
+          <p><strong>Q${index + 1}:</strong> ${q.scenario}</p>
+          ${q.options.map(opt => `
+            <label class="option">
+              <input type="radio" name="q${index}" value="${opt}"> ${opt}
+            </label>
+          `).join('')}
+        </div>
+      `;
+    });
+  }
+
+  function submitQuiz() {
+    const topic = document.getElementById("topic-selector").value;
+    const level = document.getElementById("level-selector").value;
+    const questions = quizData[topic][level];
+    let score = 0;
+
+    questions.forEach((q, index) => {
+      const selected = document.querySelector(input[name="q${index}"]:checked);
+      if (selected && selected.value === q.correct) score++;
+    });
+
+    document.getElementById("result").innerText = Your Score: ${score} / ${questions.length};
+  }
+</script>
+
+</body>
+</html>

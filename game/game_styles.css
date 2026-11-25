@@ -1,0 +1,704 @@
+/* body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
+}
+
+h1 {
+    font-size: 2rem;
+    color: #333;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    margin: 20px auto;
+    width: 300px;
+}
+
+.tile {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.tile:hover {
+    transform: scale(1.1);
+}
+
+.tile.green {
+    background-color: #4caf50;
+}
+
+.tile.yellow {
+    background-color: #ffd700;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.modal-content {
+    background-color: #fff;
+    color: #000; 
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+}
+
+.hidden {
+    display: none;
+}
+
+.instructions {
+    margin: 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    max-width: 600px;
+    margin: auto;
+    animation: fadeIn 1s ease-in-out, bounceIn 1.5s ease-in-out;
+}
+
+.instructions h2 {
+    margin-bottom: 10px;
+}
+
+.instructions ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    text-align: left;
+}
+
+.instructions button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.instructions button:hover {
+    background-color: #45a049;
+}
+
+/*@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes bounceIn {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Ensures final score message is well spaced */
+
+/* #final-score-modal {
+    text-align: center;
+    line-height: 1.6;
+}
+
+#final-score-modal p {
+    margin: 10px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+#final-score-modal strong {
+    font-size: 1.5rem;
+    color: #4caf50;
+}
+
+.option-item {
+    background: #f4f4f4;
+    padding: 12px 18px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    font-size: 16px;
+}
+
+.option-item:hover {
+    background-color: #e0e0e0;
+}
+
+.option-item.correct {
+    background-color: #4caf50;
+    color: white;
+    border-color: #388e3c;
+}
+
+.option-item.wrong {
+    background-color: #f44336;
+    color: white;
+    border-color: #c62828;
+}
+ */
+
+
+ /* body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
+}
+
+h1 {
+    font-size: 2rem;
+    color: #333;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    margin: 20px auto;
+    width: 300px;
+}
+
+.tile {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.tile:hover {
+    transform: scale(1.1);
+}
+
+.tile.green {
+    background-color: #4caf50;
+}
+
+.tile.yellow {
+    background-color: #ffd700;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.modal-content {
+    background-color: #fff;
+    color: #000; 
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+}
+
+.hidden {
+    display: none;
+}
+
+.instructions {
+    margin: 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    max-width: 600px;
+    margin: auto;
+    animation: fadeIn 1s ease-in-out, bounceIn 1.5s ease-in-out;
+}
+
+.instructions h2 {
+    margin-bottom: 10px;
+}
+
+.instructions ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    text-align: left;
+}
+
+.instructions button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.instructions button:hover {
+    background-color: #45a049;
+}
+
+/* Animations */
+/* @keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes bounceIn {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Ensures final score message is well spaced */
+
+ /*#final-score-modal {
+    text-align: center;
+    line-height: 1.6;
+}
+
+#final-score-modal p {
+    margin: 10px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+#final-score-modal strong {
+    font-size: 1.5rem;
+    color: #4caf50;
+}
+
+.option-item {
+    background: #f4f4f4;
+    padding: 12px 18px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    font-size: 16px;
+}
+
+.option-item:hover {
+    background-color: #e0e0e0;
+}
+
+.option-item.correct {
+    background-color: #4caf50;
+    color: white;
+    border-color: #388e3c;
+}
+
+.option-item.wrong {
+    background-color: #f44336;
+    color: white;
+    border-color: #c62828;
+} */ 
+/* body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: linear-gradient(to bottom, #c3e6ff, #a1cfff);
+}
+
+h1, h2, h3 {
+    color: #333;
+    font-family: 'Trebuchet MS', sans-serif;
+}
+
+h1.game-title {
+    margin-top: 20px;
+    font-size: 2.5rem;
+    color: #003366;
+    animation: pulse 1.5s infinite;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #005599;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #003366;
+    transform: scale(1.05);
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    margin: 20px auto;
+    width: 300px;
+    animation: slideIn 1s ease-out;
+}
+
+.tile {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+}
+
+.tile.green {
+    background-color: #005599;
+}
+
+.tile.yellow {
+    background-color: #065f22;
+}
+
+.tile:hover {
+    transform: scale(1.1);
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Animations */
+/*@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+} */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: linear-gradient(to bottom, #c3e6ff, #a1cfff);
+}
+
+h1, h2, h3 {
+    color: #333;
+    font-family: 'Trebuchet MS', sans-serif;
+}
+
+h1.game-title {
+    margin-top: 20px;
+    font-size: 2.5rem;
+    color: #003366;
+    animation: pulse 1.5s infinite;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #005599;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #003366;
+    transform: scale(1.05);
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    margin: 20px auto;
+    width: 300px;
+    animation: slideIn 1s ease-out;
+}
+
+.tile {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+}
+
+.tile:hover {
+    transform: scale(1.1);
+}
+
+.tile.green {
+    background-color: #065f22;
+}
+
+.tile.yellow {
+    background-color: #ffd700;
+}
+
+.tile.blue {
+    background-color: #005599;
+    color: white;
+}
+
+/* Scenario Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    color: #000;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Option Styles */
+.option-item {
+    background: #f4f4f4;
+    padding: 12px 18px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    font-size: 16px;
+}
+
+.option-item:hover {
+    background-color: #e0e0e0;
+}
+
+.option-item.correct {
+    background-color: #4caf50;
+    color: white;
+    border-color: #388e3c;
+}
+
+.option-item.wrong {
+    background-color: #f44336;
+    color: white;
+    border-color: #c62828;
+}
+
+/* Final Score Modal */
+#final-score-modal {
+    text-align: center;
+    line-height: 1.6;
+}
+
+#final-score-modal p {
+    margin: 10px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+#final-score-modal strong {
+    font-size: 1.5rem;
+    color: #4caf50;
+}
+
+/* Instructions Styling */
+.instructions {
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    animation: fadeIn 1s ease-in-out, bounceIn 1.5s ease-in-out;
+}
+
+.instructions h2 {
+    margin-bottom: 10px;
+}
+
+.instructions ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    text-align: left;
+    color: #003366;
+}
+
+.instructions button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #005599;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.instructions button:hover {
+    background-color: #003366;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes bounceIn {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    60% { transform: translateY(-10px); }
+}

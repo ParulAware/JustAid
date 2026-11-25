@@ -1,0 +1,440 @@
+part2-------------------------------------------------------------------------->
+
+restart working and scoring system also
+
+.js
+
+// Import scenarios from the external file
+import { scenarios } from './game_scenarios.js';
+
+const gameBoard = document.getElementById("game-board");
+const timerElement = document.getElementById("timer");
+const scenarioModal = document.getElementById("scenario-modal");
+const questionElement = document.getElementById("scenario-question");
+const optionsElement = document.getElementById("scenario-options");
+const explanationElement = document.getElementById("scenario-explanation");
+const continueButton = document.getElementById("continue");
+const scoreDisplay = document.getElementById("score");
+const finalScoreModal = document.getElementById("final-score-modal");
+const finalScoreElement = document.getElementById("final-score");
+const restartButton = document.getElementById("restart");
+
+let timer = 300;
+let interval;
+let currentTileIndex = 0;
+let score = 0;
+let totalScore = 0;
+let streak = 0;
+let wrongTileIndex = null; // Track the tile to move to after wrong answer
+
+document.getElementById("start-game").addEventListener("click", startGame);
+
+function startGame() {
+    document.querySelector(".instructions").classList.add("hidden");
+    document.getElementById("game-container").classList.remove("hidden");
+    initializeBoard();
+    resetTimer();
+    startTimer();
+    resetGameVariables();
+    updateScore();
+}
+
+function initializeBoard() {
+    gameBoard.innerHTML = "";
+    totalScore = 0; // Reset total score
+    for (let i = 0; i < 25; i++) {
+        const tile = document.createElement("div");
+        tile.classList.add("tile");
+        tile.dataset.index = i;
+        if (i === 0) tile.classList.add("green");
+        else if (i === 24) tile.classList.add("yellow");
+        else if (Math.random() < 0.6) {
+            tile.dataset.scenario = "true";
+            totalScore += 10; // Each tile with a scenario adds potential points
+        }
+        tile.addEventListener("click", () => handleTileClick(tile));
+        gameBoard.appendChild(tile);
+    }
+}
+
+function resetTimer() {
+    clearInterval(interval);
+    timer = 300;
+    timerElement.textContent = `Time Left: ${timer} seconds`;
+}
+
+function startTimer() {
+    interval = setInterval(() => {
+        timer--;
+        timerElement.textContent = `Time Left: ${timer} seconds`;
+        if (timer <= 0) {
+            clearInterval(interval);
+            endGame("Time's up! Final score:");
+        }
+    }, 1000);
+}
+
+function resetGameVariables() {
+    score = 0;
+    streak = 0;
+    currentTileIndex = 0;
+    wrongTileIndex = null;
+}
+
+function handleTileClick(tile) {
+    const tileIndex = parseInt(tile.dataset.index);
+    if (!isAdjacent(tileIndex)) {
+        alert("You can only move to adjacent tiles!");
+        return;
+    }
+    if (tile.dataset.scenario === "true") {
+        presentScenario(tileIndex);
+    } else {
+        advanceTile(tileIndex);
+    }
+}
+
+function isAdjacent(targetIndex) {
+    const rowSize = 5;
+    const row = Math.floor(currentTileIndex / rowSize);
+    const col = currentTileIndex % rowSize;
+    const targetRow = Math.floor(targetIndex / rowSize);
+    const targetCol = targetIndex % rowSize;
+
+    return (
+        (row === targetRow && Math.abs(col - targetCol) === 1) ||
+        (col === targetCol && Math.abs(row - targetRow) === 1)
+    );
+}
+
+function presentScenario(tileIndex) {
+    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    questionElement.textContent = scenario.question;
+    optionsElement.innerHTML = "";
+    scenario.options.forEach((option, index) => {
+        const li = document.createElement("li");
+        li.textContent = option;
+        li.addEventListener("click", () => checkAnswer(index, scenario, tileIndex));
+        optionsElement.appendChild(li);
+    });
+    scenarioModal.classList.remove("hidden");
+}
+
+function checkAnswer(selected, scenario, tileIndex) {
+    explanationElement.textContent = scenario.explanation;
+    explanationElement.classList.remove("hidden");
+    continueButton.classList.remove("hidden");
+    wrongTileIndex = null; // Reset wrongTileIndex
+
+    if (selected === scenario.correct) {
+        streak++;
+        const points = 10 * streak;
+        score += points;
+        alert(`Correct! You earn ${points} points. Total: ${score}`);
+        updateScore();
+        advanceTile(tileIndex);
+    } else {
+        streak = 0;
+        score = Math.max(0, score - 10);
+        timer = Math.max(0, timer - 10);
+        wrongTileIndex = tileIndex; // Set the wrong tile to move to
+        alert(`Wrong! 10 points deducted. Total: ${score}`);
+        updateScore();
+    }
+}
+
+// Update continue button to move to the wrong tile if applicable
+continueButton.addEventListener("click", () => {
+    scenarioModal.classList.add("hidden");
+    explanationElement.classList.add("hidden");
+    continueButton.classList.add("hidden");
+
+    if (wrongTileIndex !== null) {
+        moveToTileAfterWrongAnswer(wrongTileIndex);
+        wrongTileIndex = null; // Reset wrongTileIndex
+    }
+});
+
+function moveToTileAfterWrongAnswer(tileIndex) {
+    updateTileColor(currentTileIndex, "#bbb");
+    currentTileIndex = tileIndex;
+    updateTileColor(currentTileIndex, "#4caf50");
+    if (currentTileIndex === 24) {
+        endGame("Congratulations! Final score:");
+    }
+}
+
+function advanceTile(tileIndex) {
+    updateTileColor(currentTileIndex, "#bbb");
+    currentTileIndex = tileIndex;
+    updateTileColor(currentTileIndex, "#4caf50");
+
+    if (currentTileIndex === 24) {
+        endGame("Congratulations! Final score:");
+    }
+
+    scenarioModal.classList.add("hidden");
+    explanationElement.classList.add("hidden");
+    continueButton.classList.add("hidden");
+}
+
+function updateTileColor(index, color) {
+    const tile = gameBoard.querySelector(`[data-index='${index}']`);
+    if (tile) tile.style.backgroundColor = color;
+}
+
+function updateScore() {
+    scoreDisplay.textContent = `Score: ${score}/${totalScore}`;
+}
+
+function endGame(message) {
+    clearInterval(interval); // Stop the timer
+    finalScoreElement.innerHTML = `
+        <p>${message}</p>
+        <p><strong>${score}/${totalScore}</strong></p>
+    `; // Display the final score in a styled format
+    finalScoreModal.classList.remove("hidden"); // Show the final score modal
+}
+
+restartButton.addEventListener("click", () => {
+    finalScoreModal.classList.add("hidden"); // Hide the final score modal
+    resetGameVariables(); // Reset game variables
+    clearInterval(interval); // Clear any existing timer
+    startGame(); // Restart the game from the beginning
+});
+
+
+.css
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
+}
+
+h1 {
+    font-size: 2rem;
+    color: #333;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    margin: 20px auto;
+    width: 300px;
+}
+
+.tile {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.tile:hover {
+    transform: scale(1.1);
+}
+
+.tile.green {
+    background-color: #4caf50;
+}
+
+.tile.yellow {
+    background-color: #ffd700;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.modal-content {
+    background-color: #fff;
+    color: #000; 
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+}
+
+.hidden {
+    display: none;
+}
+
+.instructions {
+    margin: 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    max-width: 600px;
+    margin: auto;
+    animation: fadeIn 1s ease-in-out, bounceIn 1.5s ease-in-out;
+}
+
+.instructions h2 {
+    margin-bottom: 10px;
+}
+
+.instructions ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    text-align: left;
+}
+
+.instructions button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.instructions button:hover {
+    background-color: #45a049;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes bounceIn {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Ensures final score message is well spaced */
+
+ #final-score-modal {
+    text-align: center;
+    line-height: 1.6;
+}
+
+#final-score-modal p {
+    margin: 10px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+#final-score-modal strong {
+    font-size: 1.5rem;
+    color: #4caf50;
+}
+
+
+
+
+.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rescue Mission</title>
+    <link rel="stylesheet" href="game_styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Rescue Mission Game</h1>
+        <div class="instructions" id="instructions">
+            <p>Welcome to the Rescue Mission! Navigate through the tiles to reach the end, encountering legal scenarios along the way.</p>
+             <br>
+              <h2>Instructions</h2>
+    <ul>
+        <li>Start at the green tile and move to adjacent tiles only (up, down, left, right).</li>
+        <li>Some tiles contain scenarios that require you to answer legal questions.</li>
+        <li>Correct answers earn you points, and wrong answers may penalize your time.</li>
+        <li>Reach the yellow tile before time runs out to win!</li>
+    </ul>
+            <button id="start-game">Start Game</button>
+        </div>
+
+        <div id="game-container" class="hidden">
+            <div id="game-board"></div>
+            <div id="timer">Time Left: 60 seconds</div>
+            <div id="score">Score: 0/0</div>
+        </div>
+
+        <!-- Scenario Modal -->
+        <div id="scenario-modal" class="modal hidden">
+            <h2>Scenario</h2>
+            <p id="scenario-question"></p>
+            <ul id="scenario-options"></ul>
+            <p id="scenario-explanation" class="hidden"></p>
+            <button id="continue" class="hidden">Continue</button>
+        </div>
+
+        <!-- Final Score Modal -->
+        <div id="final-score-modal" class="modal hidden">
+            <h2>Game Over!</h2>
+            <p id="final-score"></p>
+            <button id="restart">Restart Game</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="game_scenarios.js"></script>
+    <script type="module" src="game_logic.js"></script>
+    <script>
+        // Event listener for Start Game button
+        document.getElementById("start-game").addEventListener("click", function() {
+            // Hide instructions
+            document.getElementById("instructions").classList.add("hidden");
+
+            // Show game container
+            document.getElementById("game-container").classList.remove("hidden");
+        });
+    </script>
+</body>
+</html>

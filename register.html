@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="C:\Users\skawa\OneDrive\Desktop\pbl\JUSTAID  LOGO.png" sizes="512x512" />
+    <title>Register</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #ffffff;
+            color: #003366;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .register-container {
+            background-color: #003366;
+            padding: 50px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        input, select, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 20px;
+            border: none;
+            font-size: 16px;
+        }
+        input, select {
+            background-color: #ffffff;
+            color: #003366;
+        }
+        button {
+            background-color: #ffffff;
+            color: #003366;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2 style="color:white;">Create Account</h2>
+
+        <input type="email" id="regEmail" placeholder="Enter email">
+        <input type="password" id="regPassword" placeholder="Enter password">
+
+        <select id="regRole">
+            <option value="user">User</option>
+            <option value="lawyer">Lawyer</option>
+        </select>
+
+        <button onclick="handleRegister()">Register</button>
+
+        <p style="color:white;">Already have an account?
+            <a href="user-login.html" style="color:#fff; text-decoration: underline;">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        function handleRegister() {
+            const email = document.getElementById("regEmail").value;
+            const password = document.getElementById("regPassword").value;
+            const role = document.getElementById("regRole").value;
+
+            if (email === "" || password === "") {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+
+            const userExists = users.some(user => user.email === email);
+            if (userExists) {
+                alert("User already exists with this email.");
+                return;
+            }
+
+            users.push({ email, password, role });
+            localStorage.setItem("users", JSON.stringify(users));
+
+            alert("Registration successful!");
+            if (role === "lawyer") {
+                window.location.href = "lawyer-login.html";
+            } else {
+                window.location.href = "user-login.html";
+            }
+        }
+    </script>
+</body>
+</html>
